@@ -60,7 +60,7 @@ cat <<EOF> ${system}.${vendor}.submit1.csh
 #SBATCH --nodes=${nodes}
 #SBATCH --ntasks=${ppn}
 #SBATCH --job-name=output_submit1
-#SBATCH --output=output_run009a
+#SBATCH --output=output_submit1
 #SBATCH -p ${queue}
 
 
@@ -85,7 +85,7 @@ cat <<EOF> ${system}.${vendor}.submit2.csh
 #SBATCH --nodes=${nodes}
 #SBATCH --ntasks=${ppn}
 #SBATCH --job-name=output_submit2
-#SBATCH --output=output_run009b
+#SBATCH --output=output_submit2
 #SBATCH -p ${queue}
 
 #module load shared
@@ -130,7 +130,7 @@ cat <<EOF>${system}.${vendor}.submit3.csh
 #SBATCH --nodes=${nodes}
 #SBATCH --ntasks=${ppn}
 #SBATCH --job-name=output_submit3
-#SBATCH --output=output_run009c
+#SBATCH --output=output_submit3
 #SBATCH -p ${queue}
 
 #module load shared
@@ -204,7 +204,7 @@ cat <<EOF> ${system}.${vendor}.submit4.csh
 #SBATCH --nodes=${nodes}
 #SBATCH --ntasks=${ppn}
 #SBATCH --job-name=output_submit4
-#SBATCH --output=output_run009d
+#SBATCH --output=output_submit4
 #SBATCH -p ${queue}
 
 
@@ -249,8 +249,8 @@ cat <<EOF> ${system}.${vendor}.submit.csh
 #SBATCH --time=${wcl}
 #SBATCH --nodes=${nodes}
 #SBATCH --ntasks=${ppn}
-#SBATCH --job-name=output_submit1
-#SBATCH --output=output_run009a
+#SBATCH --job-name=output_submit
+#SBATCH --output=output_submit
 #SBATCH -p ${queue}
 
 
