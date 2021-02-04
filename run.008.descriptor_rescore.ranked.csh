@@ -103,9 +103,55 @@ end
 
 EOF
 
+################################
+#########3rd PHASE##############
+################################
+
+foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
+
+cat <<EOF >${score}.csh
+#!/bin/tcsh 
+
+#module load shared
+module unload anaconda/2
+module load anaconda/3
+
+squeue -u stpak -t RUNNING
+
+module list
+python ${scriptdir}/phase3.py ${rootdir}/${system}/007.cart-min-and-rescore/chunks/ ${score} ${max_num}
+
+EOF
+end
+
+cat <<EOF>${system}.${vendor}.submit3.csh
+#!/bin/tcsh
+#SBATCH --time=${wcl}
+#SBATCH --nodes=${nodes}
+#SBATCH --ntasks=${ppn}
+#SBATCH --job-name=output_submit3
+#SBATCH --output=output_run009c
+#SBATCH -p ${queue}
+
+#module load shared
+module unload anaconda/2
+module load anaconda/3
+squeue -u stpak -t RUNNING
+module list
+
+foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
+
+    srun --exclusive -N1 -n1 -W 0 \${score}.csh & 
+
+end
+
+wait
+EOF
+
+
 
 ################################
-#########3nd PHASE##############
+#########4th PHASE##############
 ################################
 foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
 
@@ -152,9 +198,6 @@ rank_ligands                                                 no
 EOF
 end
 
-
-
-
 cat <<EOF> ${system}.${vendor}.submit4.csh
 #!/bin/tcsh
 #SBATCH --time=${wcl}
@@ -196,55 +239,6 @@ rm ZINCfinal_\${score}.txt
 rm \${score}.dock.out
 end
 EOF
-
-################################
-#########4th PHASE##############
-################################
-
-foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
-
-cat <<EOF >${score}.csh
-#!/bin/tcsh 
-
-#module load shared
-module unload anaconda/2
-module load anaconda/3
-
-squeue -u stpak -t RUNNING
-
-module list
-python ${scriptdir}/phase3.py ${rootdir}/${system}/007.cart-min-and-rescore/chunks/ ${score} ${max_num}
-
-EOF
-end
-
-
-
-
-cat <<EOF>${system}.${vendor}.submit3.csh
-#!/bin/tcsh
-#SBATCH --time=${wcl}
-#SBATCH --nodes=${nodes}
-#SBATCH --ntasks=${ppn}
-#SBATCH --job-name=output_submit3
-#SBATCH --output=output_run009c
-#SBATCH -p ${queue}
-
-#module load shared
-module unload anaconda/2
-module load anaconda/3
-squeue -u stpak -t RUNNING
-module list
-
-foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
-
-    srun --exclusive -N1 -n1 -W 0 \${score}.csh & 
-
-end
-
-wait
-EOF
-
 
 ################################
 #######INITIATION PHASE#########
