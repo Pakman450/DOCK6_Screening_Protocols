@@ -35,20 +35,11 @@ if ( ! -e ${rootdir}/${system}/007.cart-min-and-rescore/chunks/ ) then
 endif
 
 ### Make the appropriate directory. If it already exists, remove previous dock results from only### the same vendor.
-if (! -e ${rootdir}/${system}/009.descriptor-rescore) then
-        mkdir -p ${rootdir}/${system}/009.descriptor-rescore/
+if (! -e ${rootdir}/${system}/008.descriptor-rescore) then
+        mkdir -p ${rootdir}/${system}/008.descriptor-rescore/
 endif
 
-if (! -e ${rootdir}/${system}/009.descriptor-rescore/${vendor}) then
-        mkdir -p ${rootdir}/${system}/009.descriptor-rescore/${vendor}
-endif
-
-### Compute descriptor scores for the minimized crystal pose
-if (! -e ${rootdir}/${system}/009.descriptor-rescore/${vendor}) then
-        mkdir -p ${rootdir}/${system}/009.descriptor-rescore/${vendor}
-endif
-
-cd ${rootdir}/${system}/009.descriptor-rescore/${vendor}
+cd ${rootdir}/${system}/008.descriptor-rescore/${vendor}
 
 
 ################################
@@ -217,26 +208,26 @@ module load anaconda/2
 
 foreach score (Descriptor_Score: Continuous_Score: Pharmacophore_Score: Hungarian_Matching_Similarity_Score: Property_Volume_Score: desc_FPS_vdw_fps: desc_FPS_es_fps: Footprint_Similarity_Score: Total_Score:)
 
- /gpfs/projects/rizzo/spak/builds/dock6_MACCS/bin/dock6 -i \${score}.dock.in -o \${score}.dock.out
+     /gpfs/projects/rizzo/spak/builds/dock6_MACCS/bin/dock6 -i \${score}.dock.in -o \${score}.dock.out
 
-rm MACCS_\${score}*
-
-grep "MACCS:" \${score}.dock.out > MACCSraw_\${score}.txt
-rm \${score}.dock.in
-
-awk '{print \$2}' MACCSraw_\${score}.txt > MACCSfinal_\${score}.txt
-rm MACCSraw_\${score}.txt
-
-grep "Molecule:" \${score}.dock.out > ZINCraw_\${score}.txt
-awk '{print \$2}' ZINCraw_\${score}.txt > ZINCfinal_\${score}.txt
-
-rm ZINCraw_\${score}.txt
-
-paste ZINCfinal_\${score}.txt MACCSfinal_\${score}.txt -d "," > ZINC_MACCS_\${score}.txt
-
-rm MACCSfinal_\${score}.txt
-rm ZINCfinal_\${score}.txt
-rm \${score}.dock.out
+     rm MACCS_\${score}*
+     
+     grep "MACCS:" \${score}.dock.out > MACCSraw_\${score}.txt
+     rm \${score}.dock.in
+     
+     awk '{print \$2}' MACCSraw_\${score}.txt > MACCSfinal_\${score}.txt
+     rm MACCSraw_\${score}.txt
+     
+     grep "Molecule:" \${score}.dock.out > ZINCraw_\${score}.txt
+     awk '{print \$2}' ZINCraw_\${score}.txt > ZINCfinal_\${score}.txt
+     
+     rm ZINCraw_\${score}.txt
+     
+     paste ZINCfinal_\${score}.txt MACCSfinal_\${score}.txt -d "," > ZINC_MACCS_\${score}.txt
+     
+     rm MACCSfinal_\${score}.txt
+     rm ZINCfinal_\${score}.txt
+     rm \${score}.dock.out
 end
 EOF
 
